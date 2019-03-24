@@ -22,7 +22,7 @@ export default function Requestor() {
       .map(_ => _.value)
       .getOrElse(page);
     setPage(newPage);
-    appState.composer.set(
+    appState.setRequest(
       some({
         uri: `https://api.github.com/users?since=${newSince}&per_page=${newPage}`,
         headers: {
