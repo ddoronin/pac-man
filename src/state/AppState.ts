@@ -8,7 +8,7 @@ import { IRequest } from "src/models/request-composer";
 import { lazy } from "src/decorators/lazy";
 
 class AppState {
-  public composer = new RequestComposer();
+  constructor(private composer = new RequestComposer()) {}
 
   @lazy get history$(): Observable<IHistoricRequest[]> {
     return this.composer.request$.pipe(overHistory);
