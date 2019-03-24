@@ -1,30 +1,25 @@
 import * as React from "react";
-import RequestComposer from "src/models/request-composer";
 import { useRx } from "src/useRx";
-import { Option, option, some, none } from "monas";
-import { Observable } from "rxjs";
+import { some, none } from "monas";
+import AppContext from "src/context/AppContext";
 
-export interface IRequestorProps {
-  composer: RequestComposer;
-  http$: Observable<Option<{}>>;
-}
-
-export default function Requestor(props: IRequestorProps) {
+export default function Requestor() {
+  const appState = React.useContext(AppContext);
   const [since, setSince] = React.useState("0");
   const [page, setPage] = React.useState("5");
-  const resp = useRx(props.http$, none);
+  const resp = useRx(appState.http$, none);
   const sinceTextInput = React.createRef<HTMLInputElement>();
   const pageTextInput = React.createRef<HTMLInputElement>();
   const submit = () => {
-    const newSince = option(sinceTextInput.current as HTMLInputElement)
+    const newSince = some(sinceTextInput.current as HTMLInputElement)
       .map(_ => _.value)
       .getOrElse(since);
     setSince(newSince);
-    const newPage = option(pageTextInput.current as HTMLInputElement)
+    const newPage = some(pageTextInput.current as HTMLInputElement)
       .map(_ => _.value)
       .getOrElse(page);
     setPage(newPage);
-    props.composer.set(
+    appState.composer.set(
       some({
         uri: `https://api.github.com/users?since=${newSince}&per_page=${newPage}`,
         headers: {

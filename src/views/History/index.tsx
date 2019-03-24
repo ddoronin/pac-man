@@ -1,14 +1,10 @@
 import * as React from "react";
 import { useRx } from "src/useRx";
-import { Observable } from "rxjs";
-import { IHistoricRequest } from "src/functions/history";
+import AppContext from "src/context/AppContext";
 
-export interface IHistoryProps {
-  history$: Observable<IHistoricRequest[]>;
-}
-
-export default function History(props: IHistoryProps) {
-  const requests = useRx(props.history$, []);
+export default function History() {
+  const appState = React.useContext(AppContext);
+  const requests = useRx(appState.history$, []);
   return (
     <article>
       <header>
