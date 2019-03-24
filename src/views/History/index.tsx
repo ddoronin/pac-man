@@ -1,10 +1,10 @@
 import * as React from "react";
 import { useRx } from "src/useRx";
-import AppContext from "src/context/AppContext";
+import { AppStateContext } from "src/state/AppState";
 
 export default function History() {
-  const appState = React.useContext(AppContext);
-  const [requests] = useRx(appState.history$, []);
+  const appState = React.useContext(AppStateContext);
+  const [requests] = useRx(appState.last5$, []);
   return (
     <article>
       <header>

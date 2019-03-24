@@ -14,3 +14,9 @@ export const overHistory = scan(
       .concat(acc),
   []
 );
+
+export const overHistoryLatest5 = scan((acc: IRequest[], r: IRequest) => {
+  const res = [r].concat(acc);
+  res.length = Math.min(res.length, 5);
+  return res;
+}, []);

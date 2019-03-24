@@ -3,12 +3,12 @@ import "./styles/theme.scss";
 import History from "./views/History";
 import Requestor from "./views/Requestor";
 import styles from "./App.module.scss";
-import AppContext, { appState } from "src/context/AppContext";
+import { AppStateContext, appState } from "src/state/AppState";
 
 class App extends React.Component {
   public render() {
     return (
-      <AppContext.Provider value={appState}>
+      <AppStateContext.Provider value={appState}>
         <article className={styles.app}>
           <header>
             <h1>Pac-Man::He's back!</h1>
@@ -22,7 +22,7 @@ class App extends React.Component {
             </div>
           </section>
         </article>
-      </AppContext.Provider>
+      </AppStateContext.Provider>
     );
   }
 }

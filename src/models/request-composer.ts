@@ -4,6 +4,7 @@ import { Option, none } from "monas";
 export interface IRequest {
   uri: string;
   headers: { [key: string]: string };
+  time: number;
 }
 
 export default class RequestComposer {

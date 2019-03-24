@@ -1,16 +1,20 @@
 import * as React from "react";
 import { useRx } from "src/useRx";
 import { some, none } from "monas";
-import AppContext from "src/context/AppContext";
+import { AppStateContext } from "src/state/AppState";
 import styles from "./styles.module.scss";
 
 const print = (o: any) => JSON.stringify(o, null, "  ");
 
 export default function Requestor() {
-  const appState = React.useContext(AppContext);
+  const appState = React.useContext(AppStateContext);
   const [since, setSince] = React.useState("0");
   const [page, setPage] = React.useState("5");
-  const [resp, error] = useRx(appState.http$, none);
+  const [result, error] = useRx(appState.http$, {
+    isLoading: false,
+    req: none,
+    resp: none
+  });
   const sinceTextInput = React.createRef<HTMLInputElement>();
   const pageTextInput = React.createRef<HTMLInputElement>();
   const submit = () => {
@@ -27,7 +31,8 @@ export default function Requestor() {
         uri: `https://api.github.com/users?since=${newSince}&per_page=${newPage}`,
         headers: {
           Authorization: "bearer 0ff46177ef2fb3444d3bf398105e0f0216bda109"
-        }
+        },
+        time: Date.now()
       })
     );
   };
@@ -64,19 +69,23 @@ export default function Requestor() {
           </div>
           <button onClick={submit}>Submit</button>
           <h4>Response</h4>
-          <pre>
-            {some(error)
-              .map(_ => (
-                <div key="error" className={styles.error}>
-                  {print(_)}
-                </div>
-              ))
-              .getOrElse(
-                <div className={styles.success}>
-                  {resp.map(print).getOrElse("Nothing")}
-                </div>
-              )}
-          </pre>
+          {result.isLoading ? (
+            "Loading..."
+          ) : (
+            <pre>
+              {some(error)
+                .map(_ => (
+                  <div key="error" className={styles.error}>
+                    {print(_)}
+                  </div>
+                ))
+                .getOrElse(
+                  <div className={styles.success}>
+                    {result.resp.map(_ => print(_)).getOrElse("Nothing")}
+                  </div>
+                )}
+            </pre>
+          )}
         </div>
       </section>
     </article>
