@@ -2,12 +2,15 @@ import * as React from "react";
 import { useRx } from "src/useRx";
 import { some, none } from "monas";
 import AppContext from "src/context/AppContext";
+import styles from "./styles.module.scss";
+
+const print = (o: any) => JSON.stringify(o, null, "  ");
 
 export default function Requestor() {
   const appState = React.useContext(AppContext);
   const [since, setSince] = React.useState("0");
   const [page, setPage] = React.useState("5");
-  const resp = useRx(appState.http$, none);
+  const [resp, error] = useRx(appState.http$, none);
   const sinceTextInput = React.createRef<HTMLInputElement>();
   const pageTextInput = React.createRef<HTMLInputElement>();
   const submit = () => {
@@ -62,7 +65,17 @@ export default function Requestor() {
           <button onClick={submit}>Submit</button>
           <h4>Response</h4>
           <pre>
-            {resp.map(o => JSON.stringify(o, null, "  ")).getOrElse("Nothing")}
+            {some(error)
+              .map(_ => (
+                <div key="error" className={styles.error}>
+                  {print(_)}
+                </div>
+              ))
+              .getOrElse(
+                <div className={styles.success}>
+                  {resp.map(print).getOrElse("Nothing")}
+                </div>
+              )}
           </pre>
         </div>
       </section>

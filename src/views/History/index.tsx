@@ -4,7 +4,7 @@ import AppContext from "src/context/AppContext";
 
 export default function History() {
   const appState = React.useContext(AppContext);
-  const requests = useRx(appState.history$, []);
+  const [requests] = useRx(appState.history$, []);
   return (
     <article>
       <header>
