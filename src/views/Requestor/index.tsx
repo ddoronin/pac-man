@@ -3,10 +3,16 @@ import { useRx } from "src/useRx";
 import { some, none } from "monas";
 import { AppStateContext } from "src/state/AppState";
 import styles from "./styles.module.scss";
+import Uri from "src/components/Uri";
+import { BehaviorSubject } from "rxjs";
 
 const print = (o: any) => JSON.stringify(o, null, "  ");
 
 export default function Requestor() {
+  const uri$ = new BehaviorSubject("https://api.github.com/users");
+  const changeUri = (uri: string) => {
+    uri$.next(uri);
+  };
   const appState = React.useContext(AppStateContext);
   const [since, setSince] = React.useState("0");
   const [page, setPage] = React.useState("5");
@@ -26,15 +32,19 @@ export default function Requestor() {
       .map(_ => _.value)
       .getOrElse(page);
     setPage(newPage);
-    appState.setRequest(
-      some({
-        uri: `https://api.github.com/users?since=${newSince}&per_page=${newPage}`,
-        headers: {
-          Authorization: "bearer 0ff46177ef2fb3444d3bf398105e0f0216bda109"
-        },
-        time: Date.now()
+    uri$
+      .subscribe(uri => {
+        appState.setRequest(
+          some({
+            uri: uri$.value + `?since=${newSince}&per_page=${newPage}`,
+            headers: {
+              Authorization: "bearer 0ff46177ef2fb3444d3bf398105e0f0216bda109"
+            },
+            time: Date.now()
+          })
+        );
       })
-    );
+      .unsubscribe();
   };
 
   return (
@@ -45,6 +55,10 @@ export default function Requestor() {
       <section>
         <div>
           <h4>Request</h4>
+          <div>
+            Uri:
+            <Uri uri={uri$} onChange={changeUri} defaultUri="" />
+          </div>
           <div>
             Since:{" "}
             <input
