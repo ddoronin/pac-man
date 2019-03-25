@@ -1,4 +1,4 @@
-export function lazy<T>(
+export function computed<T>(
   target: any,
   propertyKey: string,
   descriptor: TypedPropertyDescriptor<T>

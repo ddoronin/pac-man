@@ -9,17 +9,17 @@ import { overHttp } from "src/functions/http";
 import { Observable } from "rxjs";
 import { Option } from "monas";
 import { IRequest } from "src/models/request-composer";
-import { lazy } from "src/decorators/lazy";
+import { computed } from "src/decorators/computed";
 import { filter, map } from "rxjs/operators";
 
 class AppState {
   constructor(private composer = new RequestComposer()) {}
 
-  @lazy get history$(): Observable<IHistoricRequest[]> {
+  @computed get history$(): Observable<IHistoricRequest[]> {
     return this.composer.request$.pipe(overHistory);
   }
 
-  @lazy get last5$(): Observable<IRequest[]> {
+  @computed get last5$(): Observable<IRequest[]> {
     return this.composer.request$.pipe(
       filter((_: Option<IRequest>) => _.isDefined()),
       map((_: Option<IRequest>) => _.getOrElse({} as IRequest)),
@@ -27,7 +27,7 @@ class AppState {
     );
   }
 
-  @lazy get http$(): Observable<{
+  @computed get http$(): Observable<{
     isLoading: boolean;
     req: Option<IRequest>;
     resp: Option<{}>;
