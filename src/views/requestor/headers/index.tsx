@@ -24,7 +24,7 @@ export default function Headers(props: IHeadersProps) {
   // Remove one of the headers.
   const removeHeader = (i: number) => () => {
     const _ = [...headers];
-    _.splice(i);
+    _.splice(i, 1);
     props.onChange(_);
   };
 
