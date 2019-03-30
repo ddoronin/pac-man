@@ -3,7 +3,6 @@ import "src/styles/theme.scss";
 import History from "../history";
 import Requestor from "../requestor";
 import styles from "./styles.module.scss";
-import AppState, { AppStateContext } from "src/state/AppState";
 
 class App extends React.Component {
   public render() {
@@ -12,12 +11,6 @@ class App extends React.Component {
         <section className={styles.layout}>
           <div className={styles.requestor}>
             <Requestor />
-          </div>
-          <div className={styles.requestor}>
-            <AppStateContext.Provider value={new AppState()}>
-              <Requestor />
-              <History />
-            </AppStateContext.Provider>
           </div>
           <div className={styles.history}>
             <History />

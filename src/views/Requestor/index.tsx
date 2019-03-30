@@ -2,6 +2,7 @@ import * as React from "react";
 import { useRx } from "src/useRx";
 import { some, none } from "monas";
 import { AppStateContext } from "src/state/AppState";
+import Headers from "./headers";
 import Response from "./response";
 
 export default function Requestor() {
@@ -19,15 +20,20 @@ export default function Requestor() {
     setState(e.currentTarget.value);
   };
 
+  const [headers, setHeaders] = React.useState([
+    ["Authorization", "bearer 0ff46177ef2fb3444d3bf398105e0f0216bda109"]
+  ]);
+
   const submit = () => {
     appState.setRequest(
       uri === ""
         ? none
         : some({
             uri,
-            headers: {
-              Authorization: "bearer 0ff46177ef2fb3444d3bf398105e0f0216bda109"
-            },
+            headers: headers.reduce((acc, [key, val]) => {
+              acc[key] = val;
+              return acc;
+            }, {}),
             time: Date.now()
           })
     );
@@ -44,6 +50,10 @@ export default function Requestor() {
           <div>
             <label>Uri: </label>
             <input type="text" value={uri} onChange={change(setUri)} />
+          </div>
+          <div>
+            <label>Headers: </label>
+            <Headers headers={headers} onChange={setHeaders} />
           </div>
           <button onClick={submit}>Submit</button>
           <Response response={http} error={httpError} />
