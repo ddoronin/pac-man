@@ -1,0 +1,24 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+
+  .layout {
+    display: flex;
+    flex: 1;
+
+    .history {
+      flex: 0 0 12em;
+      max-width: 12em;
+      order: -1;
+      margin: 8px;
+    }
+
+    .requestor {
+      border: 1px;
+      flex: 1;
+      margin: 8px;
+    }
+  }
+}

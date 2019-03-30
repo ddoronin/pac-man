@@ -2,3 +2,36 @@
 @import "./colors";
 @import "./inputs/reset";
 @import "./typography/index";
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+}
+
+input {
+  padding: 3px 4px;
+  width: 100%;
+  color: orange;
+  border: 1px solid orange;
+}
+
+input:focus {
+  border: 1px dotted orange;
+}
+
+button {
+  padding: 3px 4px;
+  border: 1px solid orange;
+  background-color: black;
+  color: rgb(0, 255, 242);
+
+  &:focus {
+    outline: none;
+  }
+}

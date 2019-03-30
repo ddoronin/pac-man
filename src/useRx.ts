@@ -8,7 +8,7 @@ import { Observable, Subscription } from "rxjs";
  */
 export function useRx<T>(
   observable$: Observable<T>,
-  defaultValue: T
+  defaultValue: T | (() => T)
 ): [T, any?] {
   const [x, setX] = useState(defaultValue);
   const [error, setError] = useState();

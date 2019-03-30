@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "monas": "^0.2.1",
+    "@material-ui/core": "^3.9.2",
+    "@material-ui/icons": "^3.0.2",
+    "monas": "^0.3.2",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "rxjs": "^6.4.0"

@@ -1,9 +1,9 @@
-export interface IAppModuleScss {
+export interface IStylesModuleScss {
   app: string;
   layout: string;
   history: string;
   requestor: string;
 }
 
-export const locals: IAppModuleScss;
+export const locals: IStylesModuleScss;
 export default locals;

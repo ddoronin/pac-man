@@ -1,5 +1,5 @@
-import { BehaviorSubject } from "rxjs";
-import { Option, none } from "monas";
+import { Subject } from "rxjs";
+import { Option } from "monas";
 
 export interface IRequest {
   uri: string;
@@ -8,10 +8,10 @@ export interface IRequest {
 }
 
 export default class RequestComposer {
-  public request$: BehaviorSubject<Option<IRequest>>;
+  public request$: Subject<Option<IRequest>>;
 
   constructor() {
-    this.request$ = new BehaviorSubject<Option<IRequest>>(none);
+    this.request$ = new Subject<Option<IRequest>>();
   }
 
   public set(req: Option<IRequest>) {

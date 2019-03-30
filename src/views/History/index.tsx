@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useRx } from "src/useRx";
 import { AppStateContext } from "src/state/AppState";
+import styles from "./styles.module.scss";
 
 export default function History() {
   const appState = React.useContext(AppStateContext);
@@ -11,10 +12,11 @@ export default function History() {
         <h2>History</h2>
       </header>
       <section>
-        <ul>
+        <ul className={styles.list}>
           {requests.map(req => (
-            <li key={req.time}>
-              <small>{JSON.stringify(req, null, "  ")}</small>
+            <li key={req.time} className={styles.listItem}>
+              <h2>{req.uri}</h2>
+              <pre>{JSON.stringify(req, null, "  ")}</pre>
             </li>
           ))}
         </ul>

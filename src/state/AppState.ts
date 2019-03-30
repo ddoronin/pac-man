@@ -12,7 +12,13 @@ import { IRequest } from "src/models/request-composer";
 import { computed } from "src/decorators/computed";
 import { filter, map } from "rxjs/operators";
 
-class AppState {
+export interface IResponse {
+  isLoading: boolean;
+  req: Option<IRequest>;
+  resp: Option<{}>;
+}
+
+export default class AppState {
   constructor(private composer = new RequestComposer()) {}
 
   @computed get history$(): Observable<IHistoricRequest[]> {
@@ -27,12 +33,12 @@ class AppState {
     );
   }
 
-  @computed get http$(): Observable<{
-    isLoading: boolean;
-    req: Option<IRequest>;
-    resp: Option<{}>;
-  }> {
+  @computed get http$(): Observable<IResponse> {
     return this.composer.request$.pipe(overHttp);
+  }
+
+  @computed get request(): Observable<Option<IRequest>> {
+    return this.composer.request$;
   }
 
   public setRequest(request: Option<IRequest>) {
@@ -40,6 +46,4 @@ class AppState {
   }
 }
 
-export const appState = new AppState();
-export const AppStateContext = React.createContext<AppState>(appState);
-export default AppState;
+export const AppStateContext = React.createContext<AppState>(new AppState());
