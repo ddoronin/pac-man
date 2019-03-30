@@ -31,7 +31,9 @@ export default function Requestor() {
         : some({
             uri,
             headers: headers.reduce((acc, [key, val]) => {
-              acc[key] = val;
+              if (key !== "") {
+                acc[key] = val;
+              }
               return acc;
             }, {}),
             time: Date.now()
