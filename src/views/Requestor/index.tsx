@@ -4,6 +4,7 @@ import { some, none } from "monas";
 import { AppStateContext } from "src/state/AppState";
 import Headers from "./headers";
 import Response from "./response";
+import { tap } from "rxjs/operators";
 
 export default function Requestor() {
   const appState = React.useContext(AppStateContext);
@@ -23,6 +24,20 @@ export default function Requestor() {
   const [headers, setHeaders] = React.useState([
     ["Authorization", "bearer 0ff46177ef2fb3444d3bf398105e0f0216bda109"]
   ]);
+
+  useRx(
+    appState.request.pipe(
+      tap(reqOpt => {
+        reqOpt.foreach(req => {
+          setUri(req.uri);
+          setHeaders(
+            Object.keys(req.headers).map(key => [key, req.headers[key]])
+          );
+        });
+      })
+    ),
+    none
+  );
 
   const submit = () => {
     appState.setRequest(
