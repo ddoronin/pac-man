@@ -10,7 +10,7 @@ export default function History() {
   const [requests] = useRx(appState.last5$, []);
 
   const restore = (req: IRequest) => () => {
-    appState.setRequest(some(req));
+    appState.setRequest(some({ ...req, time: Date.now() }));
   };
   return (
     <article>
