@@ -9,11 +9,11 @@ class App extends React.Component {
     return (
       <article className={styles.app}>
         <section className={styles.layout}>
-          <div className={styles.requestor}>
-            <Requestor />
-          </div>
           <div className={styles.history}>
             <History />
+          </div>
+          <div className={styles.requestor}>
+            <Requestor />
           </div>
         </section>
       </article>

@@ -19,6 +19,7 @@ input {
   width: 100%;
   color: orange;
   border: 1px solid orange;
+  box-sizing: border-box;
 }
 
 input:focus {

@@ -15,8 +15,6 @@ export const overHttp = switchMap((_: Option<IRequest>) =>
             resp: some(response)
           })),
           catchError((error: any) => {
-            // tslint:disable-next-line:no-console
-            console.log("error is ", error);
             return of({
               isLoading: false,
               req: _,

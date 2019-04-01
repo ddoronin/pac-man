@@ -1,5 +1,6 @@
 import { Subject } from "rxjs";
 import { Option } from "monas";
+import { tap } from "rxjs/operators";
 
 export interface IRequest {
   uri: string;
@@ -12,6 +13,14 @@ export default class RequestComposer {
 
   constructor() {
     this.request$ = new Subject<Option<IRequest>>();
+    this.request$
+      .pipe(
+        tap(req => {
+          // tslint:disable-next-line:no-console
+          console.log("debug", req);
+        })
+      )
+      .subscribe();
   }
 
   public set(req: Option<IRequest>) {

@@ -18,7 +18,7 @@ export default function Response(props: IResposeProps) {
       {response.isLoading ? (
         "Loading..."
       ) : (
-        <pre>
+        <pre className={styles.response}>
           {some(error)
             .map(err => (
               <div key="error" className={styles.error}>
