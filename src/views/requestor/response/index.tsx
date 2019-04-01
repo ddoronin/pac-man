@@ -5,12 +5,12 @@ import styles from "./styles.module.scss";
 
 const print = (o: any) => JSON.stringify(o, null, "  ");
 
-export interface IResposeProps {
+export interface IResponseProps {
   response: IResponse;
   error: Option<{}>;
 }
 
-export default function Response(props: IResposeProps) {
+export default function Response(props: IResponseProps) {
   const { response, error } = props;
   return (
     <>
