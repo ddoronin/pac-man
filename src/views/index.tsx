@@ -1,7 +1,7 @@
 import * as React from "react";
 import "src/styles/theme.scss";
-import History from "../history";
-import Requestor from "../requestor";
+import History from "./history";
+import Requestor from "./requestor";
 import styles from "./styles.module.scss";
 
 class App extends React.Component {

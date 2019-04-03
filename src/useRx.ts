@@ -1,46 +1,38 @@
 import { useEffect, useState } from "react";
-import { Observable, Subscription } from "rxjs";
-import { tap } from "rxjs/operators";
+import { Observable, NextObserver, Subscription } from "rxjs";
 
-/**
- * Reactive Hook that returns a tuple of resolved value and error.
- * @param { Observable<T> } observable$
- * @param { T } defaultValue
- */
-export function useRx<T>(
+export function useRxEffect<T>(
   observable$: Observable<T>,
-  defaultValue: T | (() => T)
-): [T, any?] {
-  const [x, setX] = useState(defaultValue);
-  const [error, setError] = useState();
-
-  let subscription: Subscription;
-  useEffect(() => {
-    if (!subscription) {
-      subscription = observable$.subscribe(setX, setError);
-    }
-    return () => subscription.unsubscribe();
-  }, [observable$]);
-
-  return [x, error];
-}
-
-/**
- * Reactive Hook that returns a tuple of resolved value and error.
- * @param { Observable<T> } observable$
- * @param { T } defaultValue
- */
-export function useRxTap<T>(
-  observable$: Observable<T>,
-  next?: (x: T) => void,
-  error?: (e: any) => void,
-  complete?: () => void
+  observer: NextObserver<T>
 ): void {
   let subscription: Subscription;
   useEffect(() => {
     if (!subscription) {
-      subscription = observable$.pipe(tap(next, error, complete)).subscribe();
+      subscription = observable$.subscribe(observer);
     }
     return () => subscription.unsubscribe();
   }, [observable$]);
+}
+
+export function useRxState<T>(
+  observable$: Observable<T>,
+  defaultValue: T | (() => T)
+): [T, null | any, boolean] {
+  const [value, setValue] = useState(defaultValue);
+  const [error, setError] = useState(null);
+  const [isComplete, setIsComplete] = useState(false);
+
+  useRxEffect(observable$, {
+    next(nextValue: T) {
+      setError(null);
+      setValue(nextValue);
+    },
+    error(e: any) {
+      setError(e);
+    },
+    complete() {
+      setIsComplete(true);
+    }
+  });
+  return [value, error, isComplete];
 }

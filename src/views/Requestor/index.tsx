@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useRx, useRxTap } from "src/useRx";
+import { useRxState, useRxEffect } from "src/useRx";
 import { some, none } from "monas";
 import { AppStateContext } from "src/state/AppState";
 import Headers from "./headers";
@@ -7,7 +7,7 @@ import Response from "./response";
 
 export default function Requestor() {
   const appState = React.useContext(AppStateContext);
-  const [http, httpError] = useRx(appState.http$, {
+  const [http, httpError] = useRxState(appState.http$, {
     isLoading: false,
     req: none,
     resp: none
@@ -24,11 +24,14 @@ export default function Requestor() {
     ["Authorization", "bearer 0ff46177ef2fb3444d3bf398105e0f0216bda109"]
   ]);
 
-  useRxTap(appState.request, reqOpt => {
-    reqOpt.foreach(req => {
-      setUri(req.uri);
-      setHeaders(Object.keys(req.headers).map(key => [key, req.headers[key]]));
-    });
+  useRxEffect(appState.request, {
+    next: reqOpt =>
+      reqOpt.foreach(req => {
+        setUri(req.uri);
+        setHeaders(
+          Object.keys(req.headers).map(key => [key, req.headers[key]])
+        );
+      })
   });
 
   const submit = () => {

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useRx } from "src/useRx";
+import { useRxState } from "src/useRx";
 import { AppStateContext } from "src/state/AppState";
 import { some } from "monas";
 import styles from "./styles.module.scss";
@@ -7,7 +7,7 @@ import { IRequest } from "src/models/request-composer";
 
 export default function History() {
   const appState = React.useContext(AppStateContext);
-  const [requests] = useRx(appState.last5$, []);
+  const [requests] = useRxState(appState.last5$, []);
 
   const restore = (req: IRequest) => () => {
     appState.setRequest(some({ ...req, time: Date.now() }));
