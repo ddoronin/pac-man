@@ -15,15 +15,20 @@ export default function History() {
                 <h2>History</h2>
             </header>
             <section>
-                <ul className={styles.list}>
-                    {requests.map(req => (
-                        <li key={req.time} className={styles.listItem}>
-                            <h2>{req.uri}</h2>
-                            <pre>{JSON.stringify(req, null, '  ')}</pre>
-                            <button onClick={restore(req)}>Restore</button>
-                        </li>
-                    ))}
-                </ul>
+                {requests.length === 0 && <p>No History</p>}
+                {requests.length > 0 && (
+                    <>
+                        <ul className={styles.list}>
+                            {requests.map(req => (
+                                <li key={req.time} className={styles.listItem}>
+                                    <h2>{req.uri}</h2>
+                                    <pre>{JSON.stringify(req, null, '  ')}</pre>
+                                    <button onClick={restore(req)}>Restore</button>
+                                </li>
+                            ))}
+                        </ul>
+                    </>
+                )}
             </section>
         </article>
     );
