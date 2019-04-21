@@ -3,19 +3,7 @@ import Headers from './headers';
 import Response from './response';
 import { RequestComposerContext } from 'src/models/request-composer';
 import { useRxHttp, useRxEffect } from 'src/hooks/useRx';
-
-function jsonHeaders(arr: Array<[string, string]>) {
-    return arr.reduce((acc, [key, val]) => {
-        if (key !== '') {
-            acc[key] = val;
-        }
-        return acc;
-    }, {});
-}
-
-function jsonToArray(json: { [k: string]: string }): Array<[string, string]> {
-    return Object.keys(json).map(key => [key, json[key]] as [string, string]);
-}
+import { obj2arr, arr2obj } from 'src/utils/array-object';
 
 const change = (setState: (s: any) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setState(e.currentTarget.value);
@@ -28,10 +16,11 @@ export default function Requestor() {
     const [headers, setHeaders] = React.useState<Array<[string, string]>>([
         ['Authorization', 'bearer 0ff46177ef2fb3444d3bf398105e0f0216bda109']
     ]);
+
     useRxEffect(composer.request, {
         next: req => {
             req.map(_ => setUri(_.uri));
-            req.map(_ => setHeaders(jsonToArray(_.headers)));
+            req.map(_ => setHeaders(obj2arr(_.headers)));
         }
     });
 
@@ -39,7 +28,7 @@ export default function Requestor() {
     const submit = () =>
         submitRequest({
             uri,
-            headers: jsonHeaders(headers),
+            headers: arr2obj(headers),
             time: Date.now()
         });
 
