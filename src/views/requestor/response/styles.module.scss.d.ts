@@ -1,7 +1,7 @@
 export interface IStylesModuleScss {
-  error: string;
-  success: string;
-  response: string;
+    error: string;
+    success: string;
+    response: string;
 }
 
 export const locals: IStylesModuleScss;

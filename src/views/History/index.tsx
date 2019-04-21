@@ -1,33 +1,30 @@
-import * as React from "react";
-import { useRxState } from "src/useRx";
-import { AppStateContext } from "src/state/AppState";
-import { some } from "monas";
-import styles from "./styles.module.scss";
-import { IRequest } from "src/models/request-composer";
+import * as React from 'react';
+import styles from './styles.module.scss';
+import { IRequest, RequestComposerContext } from 'src/models/request-composer';
+import { useRxResult } from 'src/hooks/useRx';
 
 export default function History() {
-  const appState = React.useContext(AppStateContext);
-  const [requests] = useRxState(appState.last5$, []);
-
-  const restore = (req: IRequest) => () => {
-    appState.setRequest(some({ ...req, time: Date.now() }));
-  };
-  return (
-    <article>
-      <header>
-        <h2>History</h2>
-      </header>
-      <section>
-        <ul className={styles.list}>
-          {requests.map(req => (
-            <li key={req.time} className={styles.listItem}>
-              <h2>{req.uri}</h2>
-              <pre>{JSON.stringify(req, null, "  ")}</pre>
-              <button onClick={restore(req)}>Restore</button>
-            </li>
-          ))}
-        </ul>
-      </section>
-    </article>
-  );
+    const composer = React.useContext(RequestComposerContext);
+    const requests = useRxResult(composer.history5) || [];
+    const restore = (req: IRequest) => () => {
+        composer.restore({ ...req, time: Date.now() });
+    };
+    return (
+        <article>
+            <header>
+                <h2>History</h2>
+            </header>
+            <section>
+                <ul className={styles.list}>
+                    {requests.map(req => (
+                        <li key={req.time} className={styles.listItem}>
+                            <h2>{req.uri}</h2>
+                            <pre>{JSON.stringify(req, null, '  ')}</pre>
+                            <button onClick={restore(req)}>Restore</button>
+                        </li>
+                    ))}
+                </ul>
+            </section>
+        </article>
+    );
 }

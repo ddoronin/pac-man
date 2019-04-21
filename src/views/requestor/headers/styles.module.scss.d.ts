@@ -1,8 +1,8 @@
 export interface IStylesModuleScss {
-  headers: string;
-  header: string;
-  label: string;
-  val: string;
+    headers: string;
+    header: string;
+    label: string;
+    val: string;
 }
 
 export const locals: IStylesModuleScss;

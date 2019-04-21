@@ -1,37 +1,32 @@
-import * as React from "react";
-import { IResponse } from "src/state/AppState";
-import { Option, some } from "monas";
-import styles from "./styles.module.scss";
+import * as React from 'react';
+import styles from './styles.module.scss';
+import { IRequest } from 'src/models/request-composer';
+import { IHttp } from 'src/hooks/useRx';
 
-const print = (o: any) => JSON.stringify(o, null, "  ");
+const print = (o: any) => JSON.stringify(o, null, '  ');
 
 export interface IResponseProps {
-  response: IResponse;
-  error: Option<{}>;
+    data: IHttp<IRequest, {}>;
 }
 
-export default function Response(props: IResponseProps) {
-  const { response, error } = props;
-  return (
-    <>
-      <h4>Response</h4>
-      {response.isLoading ? (
-        "Loading..."
-      ) : (
-        <pre className={styles.response}>
-          {some(error)
-            .map(err => (
-              <div key="error" className={styles.error}>
-                {print(err)}
-              </div>
-            ))
-            .getOrElse(
-              <div className={styles.success}>
-                {response.resp.map(_ => print(_)).getOrElse("Nothing")}
-              </div>
+export default function Response({ data }: IResponseProps) {
+    const { status, res, error } = data;
+    return (
+        <>
+            <h4>Response</h4>
+            {status === 'PENDING' && 'Loading...'}
+            {status === 'SUCCEEDED' && (
+                <pre className={styles.response}>
+                    <div className={styles.success}>{print(res)}</div>
+                </pre>
             )}
-        </pre>
-      )}
-    </>
-  );
+            {status === 'FAILED' && (
+                <pre className={styles.response}>
+                    <div key="error" className={styles.error}>
+                        {print(error)}
+                    </div>
+                </pre>
+            )}
+        </>
+    );
 }
