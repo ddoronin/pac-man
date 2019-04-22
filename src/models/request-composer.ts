@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { scan } from 'rxjs/operators';
 import { computed } from 'src/decorators/computed';
 import { ajax } from 'rxjs/ajax';
@@ -12,14 +12,14 @@ export interface IRequest {
 }
 
 export default class RequestComposer {
-    private request$ = new BehaviorSubject<IRequest | null>(null);
+    private request$ = new Subject<IRequest>();
 
     constructor() {
         this.submit = this.submit.bind(this);
         this.restore = this.restore.bind(this);
     }
 
-    @computed get request(): Observable<IRequest | null> {
+    @computed get request(): Observable<IRequest> {
         return this.request$.asObservable();
     }
 

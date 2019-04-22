@@ -9,19 +9,18 @@ const change = (setState: (s: any) => void) => (e: React.ChangeEvent<HTMLInputEl
     setState(e.currentTarget.value);
 };
 
+const initialUri = 'https://api.github.com/users';
+const initialHeaders: Array<[string, string]> = [['Authorization', 'bearer 0ff46177ef2fb3444d3bf398105e0f0216bda109']];
+
 export default function Requestor() {
     const composer = React.useContext(RequestComposerContext);
 
-    const [uri, setUri] = React.useState('https://api.github.com/users');
-    const [headers, setHeaders] = React.useState<Array<[string, string]>>([
-        ['Authorization', 'bearer 0ff46177ef2fb3444d3bf398105e0f0216bda109']
-    ]);
+    const [uri, setUri] = React.useState(initialUri);
+    const [headers, setHeaders] = React.useState(initialHeaders);
 
     useRxEffect(composer.request, req => {
-        if (req) {
-            setUri(req.uri);
-            setHeaders(obj2arr(req.headers));
-        }
+        setUri(req.uri);
+        setHeaders(obj2arr(req.headers));
     });
 
     const [response, submitRequest] = useRxHttp(composer.submit);
