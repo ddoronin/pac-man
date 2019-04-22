@@ -17,10 +17,10 @@ export default function Requestor() {
         ['Authorization', 'bearer 0ff46177ef2fb3444d3bf398105e0f0216bda109']
     ]);
 
-    useRxEffect(composer.request, {
-        next: req => {
-            req.map(_ => setUri(_.uri));
-            req.map(_ => setHeaders(obj2arr(_.headers)));
+    useRxEffect(composer.request, req => {
+        if (req) {
+            setUri(req.uri);
+            setHeaders(obj2arr(req.headers));
         }
     });
 

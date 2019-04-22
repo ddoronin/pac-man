@@ -3,11 +3,15 @@ import { Observable, NextObserver, Subject, of } from 'rxjs';
 import { switchMap, take, startWith, map, catchError } from 'rxjs/operators';
 import { ajax, AjaxRequest, AjaxResponse } from 'rxjs/ajax';
 
-export function useRxEffect<S>(observable$: Observable<S>, observer: NextObserver<S>): void {
+export function useRx<S>(observable$: Observable<S>, observer: NextObserver<S>): void {
     useEffect(() => {
         const subscription = observable$.subscribe(observer);
         return () => subscription.unsubscribe();
     }, [observable$]);
+}
+
+export function useRxEffect<S>(observable$: Observable<S>, next: (value: S) => void): void {
+    return useRx(observable$, { next });
 }
 
 function isFunction<V>(value: V | (() => V)): value is () => V {
@@ -16,7 +20,6 @@ function isFunction<V>(value: V | (() => V)): value is () => V {
 
 function initiateState<V>(subject$: Subject<V>, value: V | (() => V)) {
     const initialValue = isFunction(value) ? value() : value;
-    // TODO: if subject is behavior subject and current value is the same
     subject$.next(initialValue);
     return initialValue;
 }
@@ -24,7 +27,7 @@ function initiateState<V>(subject$: Subject<V>, value: V | (() => V)) {
 export function useRxState<S>(subject$: Subject<S>, defaultValue: S | (() => S)): [S, (result: S) => void] {
     const [value, setValue] = useState(() => initiateState(subject$, defaultValue));
 
-    useRxEffect(subject$, {
+    useRx(subject$, {
         next(val: S) {
             setValue(val);
         }
@@ -36,7 +39,7 @@ export function useRxState<S>(subject$: Subject<S>, defaultValue: S | (() => S))
 export function useRxResult<S>(observable$: Observable<S>): S | void {
     const [value, setValue] = useState<S>();
 
-    useRxEffect(observable$, {
+    useRx(observable$, {
         next(val: S) {
             setValue(val);
         }
@@ -62,7 +65,7 @@ export function useRxAjax(
         [req$]
     );
     const [res, setRes] = useState<AjaxResponse | null>(null);
-    useRxEffect(res$, {
+    useRx(res$, {
         next(response) {
             if (next) {
                 next(response);
@@ -108,7 +111,7 @@ export function useRxHttp<Req, Res>(
         [req$]
     );
     const [res, setRes] = useState<IHttp<Req, Res>>();
-    useRxEffect(res$, {
+    useRx(res$, {
         next(response) {
             if (response) {
                 if (next) {

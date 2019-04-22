@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { BehaviorSubject } from 'rxjs';
-import { some, none, Option } from 'monas';
 import { scan } from 'rxjs/operators';
 import { computed } from 'src/decorators/computed';
 import { ajax } from 'rxjs/ajax';
@@ -13,22 +12,22 @@ export interface IRequest {
 }
 
 export default class RequestComposer {
-    private request$ = new BehaviorSubject<Option<IRequest>>(none);
+    private request$ = new BehaviorSubject<IRequest | null>(null);
 
     constructor() {
         this.submit = this.submit.bind(this);
         this.restore = this.restore.bind(this);
     }
 
-    @computed get request(): Observable<Option<IRequest>> {
+    @computed get request(): Observable<IRequest | null> {
         return this.request$.asObservable();
     }
 
     @computed get history() {
         return this.request$.pipe(
-            scan((acc: IRequest[], r: Option<IRequest>) => {
-                if (r.isDefined) {
-                    return [r.get(), ...acc];
+            scan((acc: IRequest[], req: IRequest) => {
+                if (req) {
+                    return [req, ...acc];
                 }
                 return acc;
             }, [])
@@ -37,9 +36,9 @@ export default class RequestComposer {
 
     @computed get history5() {
         return this.request$.pipe(
-            scan((acc: IRequest[], r: Option<IRequest>) => {
-                if (r.isDefined()) {
-                    const res = [r.get(), ...acc];
+            scan((acc: IRequest[], req: IRequest) => {
+                if (req) {
+                    const res = [req, ...acc];
                     res.length = Math.min(5, res.length);
                     return res;
                 }
@@ -49,7 +48,7 @@ export default class RequestComposer {
     }
 
     public submit(req: IRequest): Observable<{}> {
-        this.request$.next(some(req));
+        this.request$.next(req);
         return ajax({
             url: req.uri,
             headers: req.headers,
@@ -58,7 +57,7 @@ export default class RequestComposer {
     }
 
     public restore(req: IRequest) {
-        this.request$.next(some(req));
+        this.request$.next(req);
     }
 }
 
